@@ -71,19 +71,22 @@ router.get('/:id', getUser);
  *         schema:
  *           type: string
  *         description: The ID of the user to update
- *       - in: body
- *         name: user
- *         required: true
- *         description: The user object to update
- *         schema:
- *           type: object
- *           properties:
- *             currentUserId:
- *               type: string
- *             currentUserAdminStatus:
- *               type: boolean
- *             password:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentUserId:
+ *                 type: string
+ *               currentUserAdminStatus:
+ *                 type: boolean
+ *               password:
+ *                 type: string
+ *             required:
+ *               - currentUserId
+ *               - currentUserAdminStatus
  *     responses:
  *       '200':
  *         description: Updated user object
@@ -106,19 +109,20 @@ router.patch('/:id', updateUser);
  *         schema:
  *           type: string
  *         description: The ID of the user to delete
- *       - in: body
- *         name: user
- *         required: true
- *         description: The user object to delete
- *         schema:
- *           type: object
- *           properties:
- *             currentUserId:
- *               type: string
- *             currentUserAdminStatus:
- *               type: boolean
- *             password:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentUserId:
+ *                 type: string
+ *               currentUserAdminStatus:
+ *                 type: boolean
+ *             required:
+ *               - currentUserId
+ *               - currentUserAdminStatus
  *     responses:
  *       '200':
  *         description: User account deleted successfully
