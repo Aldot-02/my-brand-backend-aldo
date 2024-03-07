@@ -31,4 +31,7 @@ mongoose.connect(CONNECTION)
 app.use('/auth', AuthRoute);
 app.use('/user', userRoute);
 app.use('/blog', BlogsRoute);
+app.get("/", (req, res) => {
+    res.send("Consider using the above link for getting my APIs");
+});
 //# sourceMappingURL=server.js.map

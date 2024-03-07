@@ -87,9 +87,8 @@ router.get('/:id', getUser);
  *               type: string
  *             currentUserAdminStatus:
  *               type: boolean
- *           required:
- *             - currentUserId
- *             - currentUserAdminStatus
+ *             password:
+ *               type: string
  *     responses:
  *       '200':
  *         description: Updated user object
@@ -113,6 +112,19 @@ router.patch('/:id', updateUser);
  *         schema:
  *           type: string
  *         description: The ID of the user to delete
+ *       - in: body
+ *         name: user
+ *         required: true
+ *         description: The user object to delete
+ *         schema:
+ *           type: object
+ *           properties:
+ *             currentUserId:
+ *               type: string
+ *             currentUserAdminStatus:
+ *               type: boolean
+ *             password:
+ *               type: string
  *     responses:
  *       '200':
  *         description: User account deleted successfully
@@ -122,6 +134,7 @@ router.patch('/:id', updateUser);
  *         description: Internal server error
  */
 router.delete('/:id', deleteUser);
+
 
 /**
  * @openapi

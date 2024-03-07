@@ -18,7 +18,7 @@ const options = {
             securitySchemes: {
                 bearerAuth: {
                     type: "apiKey",
-                    name: "x-auth-token",
+                    name: "access_secret",
                     in: "header",
                     description: "Bearer token authorization"
                 },

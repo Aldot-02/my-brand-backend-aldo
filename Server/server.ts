@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import swaggerDocs from "./utils/swagger.js";
+import { Request, Response } from 'express';
 
 // IMPORTING ROUTES
 import AuthRoute from './Routes/AuthRoute.js';
@@ -42,3 +43,7 @@ mongoose.connect(CONNECTION)
 app.use('/auth', AuthRoute);
 app.use('/user', userRoute);
 app.use('/blog', BlogsRoute);
+app.get("/", (req: Request, res: Response) => {
+    res.send("Consider using the above link for getting my APIs");
+  });
+  
