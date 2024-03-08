@@ -34,7 +34,6 @@ const router = express.Router();
  *               - password
  *               - firstname
  *               - lastname
- *               - isAdmin
  *     responses:
  *       200:
  *         description: User registered successfully
