@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import { commentBlog, createBlog, deleteBlog, getAllBlogs, getAllComments, getBlog, likeBlog, updateBlog } from '../Controllers/BlogsController.js';
+import { commentBlog, createBlog, deleteBlog, getAllBlogs, getAllComments, getBlog, likeBlog, updateBlog } from '../Controllers/BlogsController';
+import { isAuthenticated, isAdmin } from '../Middlewares/middlewares';
 
 const router: Router = express.Router();
 
@@ -97,7 +98,7 @@ const router: Router = express.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/', createBlog);
+router.post('/', isAuthenticated, isAdmin, createBlog);
 
 /**
  * @openapi
@@ -161,7 +162,7 @@ router.get('/:id', getBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', updateBlog);
+router.patch('/:id', isAuthenticated, isAdmin, updateBlog);
 
 /**
  * @openapi
@@ -183,7 +184,7 @@ router.patch('/:id', updateBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', deleteBlog);
+router.delete('/:id', isAuthenticated, isAdmin, deleteBlog);
 
 /**
  * @openapi
@@ -216,7 +217,7 @@ router.delete('/:id', deleteBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id/like', likeBlog);
+router.patch('/:id/like', isAuthenticated, likeBlog);
 
 /**
  * @openapi
@@ -235,7 +236,13 @@ router.patch('/:id/like', likeBlog);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Comment'
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 description: The comment message
+ *             required:
+ *               - message
  *     responses:
  *       '200':
  *         description: Created comment object
@@ -244,7 +251,7 @@ router.patch('/:id/like', likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', commentBlog);
+router.post('/:id/comment', isAuthenticated, commentBlog);
 
 /**
  * @openapi

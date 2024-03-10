@@ -1,5 +1,6 @@
 import express, { Router } from 'express'
-import { deleteUser, getAllUsers, getUser, updateUser } from '../Controllers/UserController.js';
+import { deleteUser, getAllUsers, getProfile, updateUser, getUser } from '../Controllers/UserController';
+import { isAuthenticated, isAdmin } from '../Middlewares/middlewares';
 
 const router: Router = express.Router();
 
@@ -42,6 +43,42 @@ const router: Router = express.Router();
 
 /**
  * @openapi
+ * /user/profile:
+ *   get:
+ *     summary: Retrieve the profile of the logged-in user
+ *     tags: [Users]
+ *     responses:
+ *       '200':
+ *         description: A user object
+ *       '401':
+ *         description: Authentication required
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get('/profile', isAuthenticated, getProfile);
+
+/**
+ * @openapi
+ * /user/:
+ *   get:
+ *     summary: Retrieve all users
+ *     tags: [Users]
+ *     responses:
+ *       '200':
+ *         description: An array of user objects
+ *       '401':
+ *         description: Authentication required
+ *       '403':
+ *         description: Unauthorized, admin access required
+ *       '500':
+ *         description: Internal server error
+ */
+router.get('/', isAuthenticated, isAdmin, getAllUsers);
+
+/**
+ * @openapi
  * /user/{id}:
  *   get:
  *     summary: Retrieve a user by ID
@@ -56,12 +93,16 @@ const router: Router = express.Router();
  *     responses:
  *       '200':
  *         description: A user object
+ *       '401':
+ *         description: Authentication required
+ *       '403':
+ *         description: Unauthorized, admin access or user account ownership required
  *       '404':
  *         description: User not found
  *       '500':
  *         description: Internal server error
  */
-router.get('/:id', getUser);
+router.get('/:id', isAuthenticated, getUser);
 
 /**
  * @openapi
@@ -83,24 +124,23 @@ router.get('/:id', getUser);
  *           schema:
  *             type: object
  *             properties:
- *               currentUserId:
- *                 type: string
- *               currentUserAdminStatus:
- *                 type: boolean
  *               password:
  *                 type: string
  *             required:
- *               - currentUserId
- *               - currentUserAdminStatus
+ *               - password
  *     responses:
  *       '200':
  *         description: Updated user object
+ *       '400':
+ *         description: At least one field is required to update
+ *       '401':
+ *         description: Authentication required
  *       '403':
- *         description: Forbidden - user not allowed to update this profile
+ *         description: You are not allowed to update this profile
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', updateUser);
+router.patch('/:id', isAuthenticated, updateUser);
 
 /**
  * @openapi
@@ -115,43 +155,17 @@ router.patch('/:id', updateUser);
  *         schema:
  *           type: string
  *         description: The ID of the user to delete
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               currentUserId:
- *                 type: string
- *               currentUserAdminStatus:
- *                 type: boolean
- *             required:
- *               - currentUserId
- *               - currentUserAdminStatus
  *     responses:
  *       '200':
  *         description: User account deleted successfully
+ *       '401':
+ *         description: Authentication required
  *       '403':
- *         description: Forbidden - user not allowed to delete this account
+ *         description: You are not allowed to delete this account
+ *       '404':
+ *         description: User not found
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', deleteUser);
-
-
-/**
- * @openapi
- * /user/:
- *   get:
- *     summary: Retrieve all users
- *     tags: [Users]
- *     responses:
- *       '200':
- *         description: An array of user objects
- *       '500':
- *         description: Internal server error
- */
-router.get('/', getAllUsers);
-
+router.delete('/:id', isAuthenticated, deleteUser);
 export default router;

@@ -1,6 +1,6 @@
-import supertest from "supertest";
 import { app } from '../utils/server.js';
 import UserModel from '../Models/UserModel.js';
+import supertest from "supertest";
 import { createConnection } from "mongoose";
 
 let connection: any, server: any;

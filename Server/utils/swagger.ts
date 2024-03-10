@@ -1,7 +1,6 @@
 import { Express, Request, Response } from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import fs from "fs";
 import { Application } from 'express';
 
 const options: swaggerJsdoc.Options = {
@@ -13,16 +12,16 @@ const options: swaggerJsdoc.Options = {
       description: 'API documentation for your RESTful APIs',
     },
     servers: [
-        {
-          url: 'http://localhost:3000',
-          description: 'Development server',
-        },
-      ],
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: "apiKey",
-          name: "access_secret",
+          name: "Authorization",
           in: "header",
           description: "Bearer token authorization"
         },

@@ -8,6 +8,16 @@ const { sign, verify } = jwt;
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { firstname, lastname, email, password, isAdmin }: User = req.body;
 
+    if (!firstname) {
+        res.status(400).json({ message: "First Name is required" });
+    } else if (!lastname){
+        res.status(400).json({ message: "Last Name is required" });
+    }else if (!email){
+        res.status(400).json({ message: "Email is required" });
+    }else if (!password){
+        res.status(400).json({ message: "Password is required" });
+    }
+
     try {
         const existingUser = await UserModel.findOne({ email });
 
@@ -39,6 +49,12 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const { email, password }: { email: string, password: string } = req.body;
 
+    if (!email){
+        res.status(400).json({ message: "Email is required" });
+    }else if (!password){
+        res.status(400).json({ message: "Password is required" });
+    }
+
     try {
         const user = await UserModel.findOne({ email });
 
@@ -50,7 +66,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             }
 
             // ACCESS TOKEN
-            const accessToken = sign({id:user._id, isAdmin: user.isAdmin}, "access_secret", {expiresIn: '1m'});
+            const accessToken = sign({id:user._id, isAdmin: user.isAdmin}, "access_secret", {expiresIn: '10m'});
     
             // REFRESH TOKEN
             const refreshToken = sign({id:user._id, isAdmin: user.isAdmin}, "refresh_secret", {expiresIn: '1w'});
@@ -69,7 +85,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 httpOnly: true
             });
 
-            res.status(200).json(user);
+            res.status(200).json(accessToken);
         }
         else {
             res.status(404).json({message: "User not found"});
@@ -155,5 +171,5 @@ export const Logout = async (req: Request, res: Response): Promise<void> => {
     res.clearCookie("access");
     res.clearCookie("refresh");
 
-    res.sendStatus(200)
+    res.status(200).json({message: "Logout was successful"});
 }

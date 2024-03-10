@@ -6,7 +6,7 @@
 
 
 import express, { Router } from 'express';
-import { AuthenticatedUser, Logout, Refresh, loginUser, registerUser } from '../Controllers/AuthController.js';
+import { AuthenticatedUser, Logout, Refresh, loginUser, registerUser } from '../Controllers/AuthController';
 
 const router: Router = express.Router();
 

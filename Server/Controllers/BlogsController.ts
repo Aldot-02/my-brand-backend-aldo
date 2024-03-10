@@ -1,6 +1,7 @@
-import BlogsModel, { Blog } from "../Models/BlogsModel.js";
+import BlogsModel, { Blog } from "../Models/BlogsModel";
 import { Request, Response } from "express";
-import CommentsModel, {Comment} from "../Models/BlogsCommentsModel.js"
+import CommentsModel, {Comment} from "../Models/BlogsCommentsModel"
+import { RequestWithUser } from '../Middlewares/middlewares'
 
 // CREATING A BLOG
 export const createBlog = async (req: Request, res: Response): Promise<void> => {
@@ -101,15 +102,17 @@ export const likeBlog = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Commenting on a blog post
-export const commentBlog = async (req: Request, res: Response): Promise<void> => {
+export const commentBlog = async (req: RequestWithUser, res: Response): Promise<void> => {
     const blogId = req.params.id;
-    const { userId, name, email, message } = req.body;
+    const { message } = req.body;
+
+    const { _id, firstname, lastname, email } = req.user;
+    const name = `${firstname} ${lastname}`;
 
     try {
         const blogPost = await BlogsModel.findById(blogId);
         if (blogPost) {
-            
-            const newComment = new CommentsModel({ userId, name, email, message });
+            const newComment = new CommentsModel({ userId: _id, name, email, message });
             await newComment.save();
 
             blogPost.comments.push(newComment._id);

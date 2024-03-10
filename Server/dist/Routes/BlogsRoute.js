@@ -1,6 +1,12 @@
-import express from 'express';
-import { commentBlog, createBlog, deleteBlog, getAllBlogs, getAllComments, getBlog, likeBlog, updateBlog } from '../Controllers/BlogsController.js';
-const router = express.Router();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const BlogsController_1 = require("../Controllers/BlogsController");
+const middlewares_1 = require("../Middlewares/middlewares");
+const router = express_1.default.Router();
 /**
  * @openapi
  * tags:
@@ -93,7 +99,7 @@ const router = express.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/', createBlog);
+router.post('/', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.createBlog);
 /**
  * @openapi
  * /blog/all:
@@ -106,7 +112,7 @@ router.post('/', createBlog);
  *       '500':
  *         description: Internal server error
  */
-router.get('/all', getAllBlogs);
+router.get('/all', BlogsController_1.getAllBlogs);
 /**
  * @openapi
  * /blog/{id}:
@@ -127,7 +133,7 @@ router.get('/all', getAllBlogs);
  *       '500':
  *         description: Internal server error
  */
-router.get('/:id', getBlog);
+router.get('/:id', BlogsController_1.getBlog);
 /**
  * @openapi
  * /blog/{id}:
@@ -154,7 +160,7 @@ router.get('/:id', getBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', updateBlog);
+router.patch('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.updateBlog);
 /**
  * @openapi
  * /blog/{id}:
@@ -175,7 +181,7 @@ router.patch('/:id', updateBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', deleteBlog);
+router.delete('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.deleteBlog);
 /**
  * @openapi
  * /blog/{id}/like:
@@ -207,7 +213,7 @@ router.delete('/:id', deleteBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id/like', likeBlog);
+router.patch('/:id/like', middlewares_1.isAuthenticated, BlogsController_1.likeBlog);
 /**
  * @openapi
  * /blog/{id}/comment:
@@ -225,7 +231,13 @@ router.patch('/:id/like', likeBlog);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Comment'
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 description: The comment message
+ *             required:
+ *               - message
  *     responses:
  *       '200':
  *         description: Created comment object
@@ -234,7 +246,7 @@ router.patch('/:id/like', likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', commentBlog);
+router.post('/:id/comment', middlewares_1.isAuthenticated, BlogsController_1.commentBlog);
 /**
  * @openapi
  * /blog/{id}/comments:
@@ -255,6 +267,6 @@ router.post('/:id/comment', commentBlog);
  *       '500':
  *         description: Internal server error
  */
-router.get('/:id/comments', getAllComments);
-export default router;
+router.get('/:id/comments', BlogsController_1.getAllComments);
+exports.default = router;
 //# sourceMappingURL=BlogsRoute.js.map

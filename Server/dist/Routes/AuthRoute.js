@@ -1,11 +1,16 @@
+"use strict";
 /**
  * @openapi
  * tags:
  *   name: Authentication
  */
-import express from 'express';
-import { AuthenticatedUser, Logout, Refresh, loginUser, registerUser } from '../Controllers/AuthController.js';
-const router = express.Router();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const AuthController_1 = require("../Controllers/AuthController");
+const router = express_1.default.Router();
 /**
  * @openapi
  * /auth/register:
@@ -42,7 +47,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/register', registerUser);
+router.post('/register', AuthController_1.registerUser);
 /**
  * @openapi
  * /auth/login:
@@ -73,7 +78,7 @@ router.post('/register', registerUser);
  *       500:
  *         description: Internal server error
  */
-router.post('/login', loginUser);
+router.post('/login', AuthController_1.loginUser);
 /**
  * @openapi
  * /auth/authenticated:
@@ -90,7 +95,7 @@ router.post('/login', loginUser);
  *       500:
  *         description: Internal server error
  */
-router.get('/authenticated', AuthenticatedUser);
+router.get('/authenticated', AuthController_1.AuthenticatedUser);
 /**
  * @openapi
  * /auth/refresh:
@@ -107,7 +112,7 @@ router.get('/authenticated', AuthenticatedUser);
  *       500:
  *         description: Internal server error
  */
-router.post('/refresh', Refresh);
+router.post('/refresh', AuthController_1.Refresh);
 /**
  * @openapi
  * /auth/logout:
@@ -124,6 +129,6 @@ router.post('/refresh', Refresh);
  *       500:
  *         description: Internal server error
  */
-router.post('/logout', Logout);
-export default router;
+router.post('/logout', AuthController_1.Logout);
+exports.default = router;
 //# sourceMappingURL=AuthRoute.js.map

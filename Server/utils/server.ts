@@ -3,13 +3,13 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
-import swaggerDocs from "../utils/swagger.js";
+import swaggerDocs from "../utils/swagger";
 import { Request, Response } from 'express';
 
 // IMPORTING ROUTES
-import AuthRoute from '../Routes/AuthRoute.js';
-import userRoute from '../Routes/UserRoute.js';
-import BlogsRoute from '../Routes/BlogsRoute.js';
+import AuthRoute from '../Routes/AuthRoute';
+import userRoute from '../Routes/UserRoute';
+import BlogsRoute from '../Routes/BlogsRoute';
 
 export const app: Application = express();
 swaggerDocs(app, 3000);

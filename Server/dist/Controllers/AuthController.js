@@ -1,18 +1,36 @@
-import UserModel from "../Models/UserModel.js";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-const { sign, verify } = jwt;
-export const registerUser = async (req, res) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logout = exports.Refresh = exports.AuthenticatedUser = exports.loginUser = exports.registerUser = void 0;
+const UserModel_js_1 = __importDefault(require("../Models/UserModel.js"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const { sign, verify } = jsonwebtoken_1.default;
+const registerUser = async (req, res) => {
     const { firstname, lastname, email, password, isAdmin } = req.body;
+    if (!firstname) {
+        res.status(400).json({ message: "First Name is required" });
+    }
+    else if (!lastname) {
+        res.status(400).json({ message: "Last Name is required" });
+    }
+    else if (!email) {
+        res.status(400).json({ message: "Email is required" });
+    }
+    else if (!password) {
+        res.status(400).json({ message: "Password is required" });
+    }
     try {
-        const existingUser = await UserModel.findOne({ email });
+        const existingUser = await UserModel_js_1.default.findOne({ email });
         if (existingUser) {
             res.status(409).json({ message: 'Account already exists with this email.' });
             return;
         }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = new UserModel({
+        const salt = await bcrypt_1.default.genSalt(10);
+        const hashedPassword = await bcrypt_1.default.hash(password, salt);
+        const newUser = new UserModel_js_1.default({
             firstname,
             lastname,
             email,
@@ -26,17 +44,24 @@ export const registerUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-export const loginUser = async (req, res) => {
+exports.registerUser = registerUser;
+const loginUser = async (req, res) => {
     const { email, password } = req.body;
+    if (!email) {
+        res.status(400).json({ message: "Email is required" });
+    }
+    else if (!password) {
+        res.status(400).json({ message: "Password is required" });
+    }
     try {
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel_js_1.default.findOne({ email });
         if (user) {
-            const validity = await bcrypt.compare(password, user.password);
+            const validity = await bcrypt_1.default.compare(password, user.password);
             if (!validity) {
                 res.status(400).json({ message: "Wrong Credentials" });
             }
             // ACCESS TOKEN
-            const accessToken = sign({ id: user._id, isAdmin: user.isAdmin }, "access_secret", { expiresIn: '1m' });
+            const accessToken = sign({ id: user._id, isAdmin: user.isAdmin }, "access_secret", { expiresIn: '10m' });
             // REFRESH TOKEN
             const refreshToken = sign({ id: user._id, isAdmin: user.isAdmin }, "refresh_secret", { expiresIn: '1w' });
             res.cookie("access", accessToken, {
@@ -51,7 +76,7 @@ export const loginUser = async (req, res) => {
                 secure: true,
                 httpOnly: true
             });
-            res.status(200).json(user);
+            res.status(200).json(accessToken);
         }
         else {
             res.status(404).json({ message: "User not found" });
@@ -61,8 +86,9 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+exports.loginUser = loginUser;
 // Getting Authenticated User
-export const AuthenticatedUser = async (req, res) => {
+const AuthenticatedUser = async (req, res) => {
     try {
         const accessToken = req.cookies['access'];
         if (!accessToken) {
@@ -78,7 +104,7 @@ export const AuthenticatedUser = async (req, res) => {
             });
             return;
         }
-        const user = await UserModel.findOne({ _id: payload.id });
+        const user = await UserModel_js_1.default.findOne({ _id: payload.id });
         if (!user) {
             res.status(401).send({
                 message: 'unauthenticated'
@@ -93,8 +119,9 @@ export const AuthenticatedUser = async (req, res) => {
         });
     }
 };
+exports.AuthenticatedUser = AuthenticatedUser;
 // REFRESHING THE TOKEN
-export const Refresh = async (req, res) => {
+const Refresh = async (req, res) => {
     try {
         const refreshToken = req.cookies['refresh'];
         const payload = verify(refreshToken, "refresh_secret");
@@ -114,11 +141,13 @@ export const Refresh = async (req, res) => {
         res.status(401).json({ message: 'Unauthenticated' });
     }
 };
-export const Logout = async (req, res) => {
+exports.Refresh = Refresh;
+const Logout = async (req, res) => {
     // res.cookie('access', '', {maxAge: 0});
     // res.cookie('refresh', '', {maxAge: 0});
     res.clearCookie("access");
     res.clearCookie("refresh");
-    res.sendStatus(200);
+    res.status(200).json({ message: "Logout was successful" });
 };
+exports.Logout = Logout;
 //# sourceMappingURL=AuthController.js.map

@@ -1,4 +1,4 @@
-import { app } from './utils/server.js';
+import { app } from './utils/server';
 import mongoose from 'mongoose';
 
 const CONNECTION: string | undefined = process.env.MONGODB_URL;

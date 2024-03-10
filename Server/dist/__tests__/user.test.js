@@ -1,11 +1,16 @@
-import supertest from 'supertest';
-import { app } from '../utils/server.js';
-import { createConnection } from 'mongoose';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const supertest_1 = __importDefault(require("supertest"));
+const server_js_1 = require("../utils/server.js");
+const mongoose_1 = require("mongoose");
 let connection, server;
 beforeAll(async () => {
-    connection = await createConnection();
+    connection = await (0, mongoose_1.createConnection)();
     await connection.dropDatabase();
-    server = app.listen(process.env.PORT);
+    server = server_js_1.app.listen(process.env.PORT);
 });
 afterAll(() => {
     connection.close();
@@ -22,7 +27,7 @@ describe('User', () => {
                     email: '',
                     password: ''
                 };
-                await supertest(app)
+                await (0, supertest_1.default)(server_js_1.app)
                     .get(`/user/${userId}`)
                     .expect(200)
                     .expect('Content-Type', /json/)
@@ -32,7 +37,7 @@ describe('User', () => {
             });
             it('should return a 404 when given a non-existent user ID', async () => {
                 const userId = "nonexistent-user-id";
-                await supertest(app)
+                await (0, supertest_1.default)(server_js_1.app)
                     .get(`/user/${userId}`)
                     .expect(404);
             });
@@ -40,7 +45,7 @@ describe('User', () => {
     });
     describe('Retrieve all users Route', () => {
         it('should return a 200 and an array of users if users exist', async () => {
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .get('/user')
                 .expect(200)
                 .expect('Content-Type', /json/)
@@ -50,7 +55,7 @@ describe('User', () => {
             });
         });
         it('should return a 200 and an empty array if no users exist', async () => {
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .get('/user')
                 .expect(200)
                 .expect('Content-Type', /json/)
@@ -69,7 +74,7 @@ describe('User', () => {
                 lastname: '',
                 email: '',
             };
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .patch(`/user/${userId}`)
                 .send({
                 currentUserId: currentUserId,
@@ -85,7 +90,7 @@ describe('User', () => {
         it('should return a 403 if the user is not allowed to update', async () => {
             const userId = "";
             const currentUserId = "";
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .patch(`/user/${userId}`)
                 .send({
                 currentUserId: currentUserId,
@@ -98,7 +103,7 @@ describe('User', () => {
         it('should delete a user when given valid data and permissions', async () => {
             const userId = "";
             const currentUserId = "";
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .delete(`/user/${userId}`)
                 .send({
                 currentUserId: currentUserId,
@@ -109,7 +114,7 @@ describe('User', () => {
         it('should return a 403 if the user is not allowed to delete', async () => {
             const userId = "";
             const currentUserId = "";
-            await supertest(app)
+            await (0, supertest_1.default)(server_js_1.app)
                 .delete(`/user/${userId}`)
                 .send({
                 currentUserId: currentUserId,
