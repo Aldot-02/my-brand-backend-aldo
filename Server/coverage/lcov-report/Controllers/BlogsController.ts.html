@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">29.54% </span>
+                <span class="strong">20.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/88</span>
+                <span class='fraction'>18/88</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.5% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/80</span>
+                <span class='fraction'>10/80</span>
             </div>
         
             
@@ -235,22 +235,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -370,7 +370,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import BlogsModel, { Blog } from "../Models/BlogsModel";
 import { Request, Response } from "express";
 import CommentsModel, {Comment} from "../Models/BlogsCommentsModel"
-import { RequestWithUser } from '../Middlewares/middlewares'
+import { CustomRequest } from '../Middlewares/middlewares'
 &nbsp;
 // CREATING A BLOG
 export const createBlog = <span class="fstat-no" title="function not covered" >async </span>(req: Request, res: Response): Promise&lt;void&gt; =&gt; {
@@ -386,23 +386,23 @@ export const createBlog = <span class="fstat-no" title="function not covered" >a
 &nbsp;
 &nbsp;
 //get a Blog
-export const getBlog = async (req: Request, res: Response): Promise&lt;void&gt; =&gt; {
-    const id = req.params.id;
+export const getBlog = <span class="fstat-no" title="function not covered" >async </span>(req: Request, res: Response): Promise&lt;void&gt; =&gt; {
+    const id = <span class="cstat-no" title="statement not covered" >req.params.id;</span>
 &nbsp;
-    try {
-        const blog = await BlogsModel.findById(id);
-        res.status(200).json(blog);
+<span class="cstat-no" title="statement not covered" >    try {</span>
+        const blog = <span class="cstat-no" title="statement not covered" >await BlogsModel.findById(id);</span>
+<span class="cstat-no" title="statement not covered" >        res.status(200).json(blog);</span>
     } catch (error) {
-        res.status(500).json({message: error});
+<span class="cstat-no" title="statement not covered" >        res.status(500).json({message: error});</span>
     }
 };
 &nbsp;
 &nbsp;
 // get All Blogs
-export const getAllBlogs = async (req: Request, res: Response) : Promise&lt;void&gt; =&gt; {
-    try {
-        const blogs: Blog[] = await BlogsModel.find()
-        res.status(200).send(blogs);
+export const getAllBlogs = <span class="fstat-no" title="function not covered" >async </span>(req: Request, res: Response) : Promise&lt;void&gt; =&gt; {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+        const blogs: Blog[] = <span class="cstat-no" title="statement not covered" >await BlogsModel.find()</span>
+<span class="cstat-no" title="statement not covered" >        res.status(200).send(blogs);</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >        res.status(500).json({message: error});</span>
     }
@@ -471,7 +471,7 @@ export const likeBlog = <span class="fstat-no" title="function not covered" >asy
 };
 &nbsp;
 // Commenting on a blog post
-export const commentBlog = <span class="fstat-no" title="function not covered" >async </span>(req: RequestWithUser, res: Response): Promise&lt;void&gt; =&gt; {
+export const commentBlog = <span class="fstat-no" title="function not covered" >async </span>(req: CustomRequest, res: Response): Promise&lt;void&gt; =&gt; {
     const blogId = <span class="cstat-no" title="statement not covered" >req.params.id;</span>
     const { message } = <span class="cstat-no" title="statement not covered" >req.body;</span>
 &nbsp;
@@ -526,7 +526,7 @@ export const getAllComments = <span class="fstat-no" title="function not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-12T08:48:31.637Z
+                at 2024-03-12T17:22:15.395Z
             </div>
         <script src="../prettify.js"></script>
         <script>

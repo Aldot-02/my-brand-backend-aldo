@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-// import { ParamsDictionary } from 'express-serve-static-core';
 import UserModel from '../Models/UserModel';
 
 export interface CustomRequest extends Request {
     user?: any; 
-  }
+}
 
 export const isAuthenticated = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -27,38 +26,63 @@ export const isAuthenticated = async (req: CustomRequest, res: Response, next: N
             return;
         }
 
-        const user = await UserModel.findById(payload.id);
+        const user = await UserModel.findOne({ _id: payload.id });
 
         if (!user) {
-            res.status(404).send({
-                message: 'User not found'
+            res.status(401).send({
+                message: 'unauthenticated'
             });
             return;
         }
+        
 
-        req.user = user;
-
-        next();
+        res.status(200).json(user);
+        next()
     } catch (e) {
         res.status(401).send({
             message: 'unauthenticated'
         });
+        return;
     }
 }
 
 export const isAdmin = async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const user = req.user;
+    try {
+        const accessToken = req.cookies['access'];
+        
+        if (!accessToken) {
+            return res.status(401).send({
+                message: 'unauthenticated'
+            });
+        }
 
-    if (!user) {
-        res.status(404).send({
-            message: 'User not found'
+        const payload: any = verify(accessToken, "access_secret");
+
+        if (!payload) {
+            return res.status(401).send({
+                message: 'unauthenticated'
+            });
+        }
+
+        const user = await UserModel.findOne({ _id: payload.id });
+
+        if (!user) {
+            return res.status(401).send({
+                message: 'unauthenticated'
+            });
+        }
+
+        // Check if the user is an admin
+        if (!user.isAdmin) {
+            return res.status(403).json({ message: "Unauthorized, admin access required" });
+        }
+
+        // If the user is an admin, proceed
+        res.status(200).json(user);
+        next();
+    } catch (e) {
+        return res.status(401).send({
+            message: 'unauthenticated'
         });
-        return;
     }
-
-    if (!user.isAdmin) {
-        return res.status(403).json({ message: "Unauthorized, admin access required" });
-    }
-
-    next();
 };

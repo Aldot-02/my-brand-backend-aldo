@@ -119,16 +119,14 @@
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -146,14 +144,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -166,14 +162,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -188,6 +182,7 @@ var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAdmin = exports.isAuthenticated = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
+// import { ParamsDictionary } from 'express-serve-static-core';
 const UserModel_1 = __importDefault(require("../Models/UserModel"));
 const isAuthenticated = async (req, res, next) =&gt; {
     try {
@@ -205,7 +200,6 @@ const isAuthenticated = async (req, res, next) =&gt; {
             });
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-        // Find the user based on the id in the payload
         const user = <span class="cstat-no" title="statement not covered" >await UserModel_1.default.findById(payload.id);</span>
 <span class="cstat-no" title="statement not covered" >        if (!user) {</span>
 <span class="cstat-no" title="statement not covered" >            res.status(404).send({</span>
@@ -213,7 +207,6 @@ const isAuthenticated = async (req, res, next) =&gt; {
             });
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-        // Add the user to the request object
 <span class="cstat-no" title="statement not covered" >        req.user = user;</span>
 <span class="cstat-no" title="statement not covered" >        next();</span>
     }
@@ -225,7 +218,6 @@ const isAuthenticated = async (req, res, next) =&gt; {
 };
 exports.isAuthenticated = isAuthenticated;
 const isAdmin = <span class="fstat-no" title="function not covered" >as</span>ync (req, res, next) =&gt; {
-    // Access the user directly from req.user
     const user = <span class="cstat-no" title="statement not covered" >req.user;</span>
 <span class="cstat-no" title="statement not covered" >    if (!user) {</span>
 <span class="cstat-no" title="statement not covered" >        res.status(404).send({</span>
@@ -233,7 +225,6 @@ const isAdmin = <span class="fstat-no" title="function not covered" >as</span>yn
         });
 <span class="cstat-no" title="statement not covered" >        return;</span>
     }
-    // Check if the user is an admin
 <span class="cstat-no" title="statement not covered" >    if (!user.isAdmin) {</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(403).json({ message: "Unauthorized, admin access required" });</span>
     }
@@ -247,7 +238,7 @@ exports.isAdmin = isAdmin;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-12T08:37:29.137Z
+                at 2024-03-12T17:22:15.395Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
