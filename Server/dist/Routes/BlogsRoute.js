@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const BlogsController_1 = require("../Controllers/BlogsController");
-const middlewares_1 = require("../Middlewares/middlewares");
 const router = express_1.default.Router();
 /**
  * @openapi
@@ -99,7 +98,7 @@ const router = express_1.default.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.createBlog);
+router.post('/', BlogsController_1.createBlog);
 /**
  * @openapi
  * /blog/all:
@@ -160,7 +159,7 @@ router.get('/:id', BlogsController_1.getBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.updateBlog);
+router.patch('/:id', BlogsController_1.updateBlog);
 /**
  * @openapi
  * /blog/{id}:
@@ -181,7 +180,7 @@ router.patch('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, Blogs
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.deleteBlog);
+router.delete('/:id', BlogsController_1.deleteBlog);
 /**
  * @openapi
  * /blog/{id}/like:
@@ -213,7 +212,7 @@ router.delete('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, Blog
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id/like', middlewares_1.isAuthenticated, BlogsController_1.likeBlog);
+router.patch('/:id/like', BlogsController_1.likeBlog);
 /**
  * @openapi
  * /blog/{id}/comment:
@@ -246,7 +245,7 @@ router.patch('/:id/like', middlewares_1.isAuthenticated, BlogsController_1.likeB
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', middlewares_1.isAuthenticated, BlogsController_1.commentBlog);
+router.post('/:id/comment', BlogsController_1.commentBlog);
 /**
  * @openapi
  * /blog/{id}/comments:

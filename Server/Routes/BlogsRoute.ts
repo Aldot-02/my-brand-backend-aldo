@@ -98,7 +98,7 @@ const router: Router = express.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/', isAuthenticated, isAdmin, createBlog);
+router.post('/', createBlog);
 
 /**
  * @openapi
@@ -162,7 +162,7 @@ router.get('/:id', getBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', isAuthenticated, isAdmin, updateBlog);
+router.patch('/:id', updateBlog);
 
 /**
  * @openapi
@@ -184,7 +184,7 @@ router.patch('/:id', isAuthenticated, isAdmin, updateBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', isAuthenticated, isAdmin, deleteBlog);
+router.delete('/:id', deleteBlog);
 
 /**
  * @openapi
@@ -217,7 +217,7 @@ router.delete('/:id', isAuthenticated, isAdmin, deleteBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id/like', isAuthenticated, likeBlog);
+router.patch('/:id/like', likeBlog);
 
 /**
  * @openapi
@@ -251,7 +251,7 @@ router.patch('/:id/like', isAuthenticated, likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', isAuthenticated, commentBlog);
+router.post('/:id/comment', commentBlog);
 
 /**
  * @openapi
