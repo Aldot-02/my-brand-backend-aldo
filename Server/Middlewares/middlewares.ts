@@ -28,7 +28,8 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
             return;
         }
 
-        const user = await UserModel.findOne({ _id: payload.id });
+        // Find the user based on the id in the payload
+        const user = await UserModel.findById(payload.id);
 
         if (!user) {
             res.status(404).send({
@@ -36,7 +37,8 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
             });
             return;
         }
-        res.status(200).json(user);
+
+        // Add the user to the request object
         req.user = user;
 
         next();
@@ -48,6 +50,7 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
 }
 
 export const isAdmin = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    // Access the user directly from req.user
     const user = req.user;
 
     if (!user) {
@@ -57,10 +60,10 @@ export const isAdmin = async (req: RequestWithUser, res: Response, next: NextFun
         return;
     }
 
+    // Check if the user is an admin
     if (!user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized, admin access required" });
     }
-    res.status(200).json(user);
 
     next();
 };
