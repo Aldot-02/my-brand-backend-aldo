@@ -32,12 +32,10 @@ export const isAuthenticated = async (req: CustomRequest, res: Response, next: N
             res.status(401).send({
                 message: 'unauthenticated'
             });
-            return;
+        } else {
+            req.user = user;
+            next();
         }
-        
-
-        res.status(200).json(user);
-        next()
     } catch (e) {
         res.status(401).send({
             message: 'unauthenticated'
@@ -74,15 +72,19 @@ export const isAdmin = async (req: CustomRequest, res: Response, next: NextFunct
 
         // Check if the user is an admin
         if (!user.isAdmin) {
-            return res.status(403).json({ message: "Unauthorized, admin access required" });
+            res.status(403).json({ message: "Unauthorized, admin access required" });
+        } else {
+            req.user = user;
+            next();
         }
 
         // If the user is an admin, proceed
-        res.status(200).json(user);
-        next();
+        // res.status(200).json(user);
+        // next();
     } catch (e) {
         return res.status(401).send({
             message: 'unauthenticated'
         });
     }
+    next()
 };

@@ -27,10 +27,11 @@ const isAuthenticated = async (req, res, next) => {
             res.status(401).send({
                 message: 'unauthenticated'
             });
-            return;
         }
-        res.status(200).json(user);
-        next();
+        else {
+            req.user = user;
+            next();
+        }
     }
     catch (e) {
         res.status(401).send({
@@ -62,17 +63,22 @@ const isAdmin = async (req, res, next) => {
         }
         // Check if the user is an admin
         if (!user.isAdmin) {
-            return res.status(403).json({ message: "Unauthorized, admin access required" });
+            res.status(403).json({ message: "Unauthorized, admin access required" });
+        }
+        else {
+            req.user = user;
+            next();
         }
         // If the user is an admin, proceed
-        res.status(200).json(user);
-        next();
+        // res.status(200).json(user);
+        // next();
     }
     catch (e) {
         return res.status(401).send({
             message: 'unauthenticated'
         });
     }
+    next();
 };
 exports.isAdmin = isAdmin;
 //# sourceMappingURL=middlewares.js.map
