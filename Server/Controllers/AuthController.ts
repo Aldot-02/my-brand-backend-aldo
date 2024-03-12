@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import UserModel, { User } from "../Models/UserModel.js";
+import UserModel, { User } from "../Models/UserModel";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
 
 const { sign, verify } = jwt;
 
@@ -10,25 +11,29 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     if (!firstname) {
         res.status(400).json({ message: "First Name is required" });
+        return;
     } else if (!lastname){
         res.status(400).json({ message: "Last Name is required" });
-    }else if (!email){
+        return;
+    } else if (!email){
         res.status(400).json({ message: "Email is required" });
-    }else if (!password){
+        return;
+    } else if (!password){
         res.status(400).json({ message: "Password is required" });
+        return;
     }
 
     try {
         const existingUser = await UserModel.findOne({ email });
-
+    
         if (existingUser) {
             res.status(409).json({ message: 'Account already exists with this email.' });
             return;
         }
-
+    
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
+    
         const newUser = new UserModel({
             firstname,
             lastname,
@@ -36,9 +41,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             password: hashedPassword,
             isAdmin: isAdmin || false
         });
-
+    
         await newUser.save();
-
+    
         res.status(200).json(newUser);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -51,8 +56,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     if (!email){
         res.status(400).json({ message: "Email is required" });
+        return;
     }else if (!password){
         res.status(400).json({ message: "Password is required" });
+        return;
     }
 
     try {
@@ -62,7 +69,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             const validity = await bcrypt.compare(password, user.password);
 
             if(!validity) {
-                res.status(400).json({message: "Wrong Credentials"})
+                res.status(400).json({message: "Wrong Credentials"});
+                return;
             }
 
             // ACCESS TOKEN
@@ -85,13 +93,16 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 httpOnly: true
             });
 
-            res.status(200).json(accessToken);
+            res.status(200).json({ accessToken, isAdmin: user.isAdmin });
+            return;
         }
         else {
             res.status(404).json({message: "User not found"});
+            return;
         }
     } catch (error: any) {
         res.status(500).json({ message: error.message });
+        return;
     }
 };
 
@@ -132,6 +143,7 @@ export const AuthenticatedUser = async (req: Request, res: Response): Promise<vo
         res.status(401).send({
             message: 'unauthenticated'
         });
+        return;
     }
 }
 

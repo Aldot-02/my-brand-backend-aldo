@@ -8,8 +8,7 @@
     "start": "node dist/server.js",
     "build": "npx tsc",
     "dev": "nodemon dist/server.js & npx tsc -w",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.7",

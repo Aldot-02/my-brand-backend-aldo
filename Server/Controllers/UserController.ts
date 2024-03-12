@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UserModel, { User } from "../Models/UserModel.js";
+import UserModel, { User } from "../Models/UserModel";
 import bcrypt from 'bcrypt';
 import { RequestWithUser } from '../Middlewares/middlewares'
 
@@ -12,11 +12,14 @@ export const getProfile = async (req: RequestWithUser, res: Response): Promise<v
 
         if (userProfile) {
             res.status(200).json(userProfile);
+            return;
         } else {
             res.status(404).json({message: "User Doesn't exist"});
+            return;
         }
     } catch (error) {
         res.status(500).json(error);
+        return;
     }
 };
 
@@ -31,14 +34,18 @@ export const getUser = async (req: RequestWithUser, res: Response): Promise<void
 
             if (userToGet) {
                 res.status(200).json(userToGet);
+                return;
             } else {
                 res.status(404).json({message: "User Doesn't exist"});
+                return;
             }
         } else {
             res.status(403).json({message: "You are not allowed to access this Profile"});
+            return;
         }
     } catch (error) {
         res.status(500).json(error);
+        return;
     }
 };
 
@@ -47,8 +54,10 @@ export const getAllUsers = async (req: Request, res: Response) : Promise<void> =
     try {
         const users: User[] = await UserModel.find().select('-password').lean<User[]>().exec();
         res.status(200).send(users);
+        return;
     } catch (error) {
         res.status(500).json(error);
+        return;
     }
 }
 
@@ -66,11 +75,14 @@ export const updateUser = async (req: RequestWithUser, res: Response): Promise<v
             const updatedUser: User | null = await UserModel.findByIdAndUpdate(id, req.body, { new: true }).select('-password').lean<User>().exec();
 
             res.status(200).json(updatedUser);
+            return;
         } else {
             res.status(403).json({message: "You are not allowed to update this Profile"});
+            return;
         }
     } catch (error: any) {
         res.status(500).json({ message: error.message });
+        return;
     }
 };
 
@@ -83,10 +95,13 @@ export const deleteUser = async (req: RequestWithUser, res: Response): Promise<v
         if (user._id.toString() === id || user.isAdmin) {
             await UserModel.findByIdAndDelete(id);
             res.status(200).json({ message: "Account deleted successfully" });
+            return;
         } else {
             res.status(403).json({ message: "You are not allowed to delete this account" });
+            return;
         }
     } catch (error: any) {
         res.status(500).json({ message: error.message });
+        return;
     }
 };
