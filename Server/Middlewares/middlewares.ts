@@ -32,10 +32,11 @@ export const isAuthenticated = async (req: CustomRequest, res: Response, next: N
             res.status(401).send({
                 message: 'unauthenticated'
             });
-        } else {
-            req.user = user;
-            next();
+            return;
         }
+        
+
+        res.status(200).json(user);
     } catch (e) {
         res.status(401).send({
             message: 'unauthenticated'
@@ -45,46 +46,18 @@ export const isAuthenticated = async (req: CustomRequest, res: Response, next: N
 }
 
 export const isAdmin = async (req: CustomRequest, res: Response, next: NextFunction) => {
-    try {
-        const accessToken = req.cookies['access'];
-        
-        if (!accessToken) {
-            return res.status(401).send({
-                message: 'unauthenticated'
-            });
-        }
+    const user = req.user;
 
-        const payload: any = verify(accessToken, "access_secret");
-
-        if (!payload) {
-            return res.status(401).send({
-                message: 'unauthenticated'
-            });
-        }
-
-        const user = await UserModel.findOne({ _id: payload.id });
-
-        if (!user) {
-            return res.status(401).send({
-                message: 'unauthenticated'
-            });
-        }
-
-        // Check if the user is an admin
-        if (!user.isAdmin) {
-            res.status(403).json({ message: "Unauthorized, admin access required" });
-        } else {
-            req.user = user;
-            next();
-        }
-
-        // If the user is an admin, proceed
-        // res.status(200).json(user);
-        // next();
-    } catch (e) {
-        return res.status(401).send({
-            message: 'unauthenticated'
+    if (!user) {
+        res.status(404).send({
+            message: 'User not found'
         });
+        return;
     }
-    next()
+
+    if (!user.isAdmin) {
+        return res.status(403).json({ message: "Unauthorized, admin access required" });
+    }
+
+    next();
 };
