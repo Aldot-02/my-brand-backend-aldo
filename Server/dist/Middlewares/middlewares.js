@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isAdmin = exports.isAuthenticated = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
+// import { ParamsDictionary } from 'express-serve-static-core';
 const UserModel_1 = __importDefault(require("../Models/UserModel"));
 const isAuthenticated = async (req, res, next) => {
     try {
@@ -22,7 +23,6 @@ const isAuthenticated = async (req, res, next) => {
             });
             return;
         }
-        // Find the user based on the id in the payload
         const user = await UserModel_1.default.findById(payload.id);
         if (!user) {
             res.status(404).send({
@@ -30,7 +30,6 @@ const isAuthenticated = async (req, res, next) => {
             });
             return;
         }
-        // Add the user to the request object
         req.user = user;
         next();
     }
@@ -42,7 +41,6 @@ const isAuthenticated = async (req, res, next) => {
 };
 exports.isAuthenticated = isAuthenticated;
 const isAdmin = async (req, res, next) => {
-    // Access the user directly from req.user
     const user = req.user;
     if (!user) {
         res.status(404).send({
@@ -50,7 +48,6 @@ const isAdmin = async (req, res, next) => {
         });
         return;
     }
-    // Check if the user is an admin
     if (!user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized, admin access required" });
     }

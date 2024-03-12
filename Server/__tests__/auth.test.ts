@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { sign } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
-import { RequestWithUser } from '../Middlewares/middlewares';
+import { CustomRequest } from '../Middlewares/middlewares';
 import UserModel, { User } from '../Models/UserModel';
 import { getUser, getAllUsers, updateUser, deleteUser } from '../Controllers/UserController'
 import BlogsModel from '../Models/BlogsModel';
@@ -225,7 +225,7 @@ describe('/user/', () => {
                 const req = { params: { id: '658a1e881d73fc245780dc4f' } } as unknown as Request;
                 const res = { status: jest.fn().mockReturnThis(), send: jest.fn() } as unknown as Response;
             
-                await getUser(req as RequestWithUser, res);
+                await getUser(req as CustomRequest, res);
             
                 expect(res.status).toHaveBeenCalledWith(200);
             });
@@ -234,7 +234,7 @@ describe('/user/', () => {
                 const req = { params: { id: '658a1e881d73fc245780dc4e' } } as unknown as Request;
                 const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
 
-                await getUser(req as RequestWithUser, res);
+                await getUser(req as CustomRequest, res);
 
                 expect(res.sendStatus(404))
             });
@@ -268,7 +268,7 @@ describe('/user/', () => {
 
     describe('Update a user by ID', () => {
         it('should update a user when given valid data and permissions', async () => {
-            const req = { params: { id: 'validUserID' }, user: { _id: 'validUserID', isAdmin: true }, body: { firstname: "Aldo" } } as unknown as RequestWithUser;
+            const req = { params: { id: 'validUserID' }, user: { _id: 'validUserID', isAdmin: true }, body: { firstname: "Aldo" } } as unknown as CustomRequest;
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
 
             UserModel.findByIdAndUpdate = jest.fn().mockResolvedValue({ firstname: "Aldo" } as User);
@@ -279,7 +279,7 @@ describe('/user/', () => {
         });
 
         it('should return a 403 if the user is not allowed to update', async () => {
-            const req = { params: { id: 'validUserID' }, user: { _id: 'anotherUserID', isAdmin: false }, body: { firstname: "Aldo" } } as unknown as RequestWithUser;
+            const req = { params: { id: 'validUserID' }, user: { _id: 'anotherUserID', isAdmin: false }, body: { firstname: "Aldo" } } as unknown as CustomRequest;
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
 
             await updateUser(req, res);
@@ -290,7 +290,7 @@ describe('/user/', () => {
 
     describe('Delete a user by ID', () => {
         it('should delete a user when given valid data and permissions', async () => {
-            const req = { params: { id: 'validUserID' }, user: { _id: 'validUserID', isAdmin: true } } as unknown as RequestWithUser;
+            const req = { params: { id: 'validUserID' }, user: { _id: 'validUserID', isAdmin: true } } as unknown as CustomRequest;
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
 
             UserModel.findByIdAndDelete = jest.fn().mockResolvedValue({ message: 'Account deleted successfully' });
@@ -301,7 +301,7 @@ describe('/user/', () => {
         });
 
         it('should return a 403 if the user is not allowed to delete', async () => {
-            const req = { params: { id: 'validUserID' }, user: { _id: 'anotherUserID', isAdmin: false } } as unknown as RequestWithUser;
+            const req = { params: { id: 'validUserID' }, user: { _id: 'anotherUserID', isAdmin: false } } as unknown as CustomRequest;
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as unknown as Response;
 
             await deleteUser(req, res);

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import UserModel, { User } from "../Models/UserModel";
 import bcrypt from 'bcrypt';
-import { RequestWithUser } from '../Middlewares/middlewares'
+import { CustomRequest } from '../Middlewares/middlewares'
 
 // Getting a Personal information
-export const getProfile = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const getProfile = async (req: CustomRequest, res: Response): Promise<void> => {
     const user: User = req.user;
 
     try {
@@ -24,7 +24,7 @@ export const getProfile = async (req: RequestWithUser, res: Response): Promise<v
 };
 
 // Getting a single user
-export const getUser = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const getUser = async (req: CustomRequest, res: Response): Promise<void> => {
     const id: string = req.params.id;
     const user: User = req.user;
 
@@ -62,7 +62,7 @@ export const getAllUsers = async (req: Request, res: Response) : Promise<void> =
 }
 
 // Updating user's Information
-export const updateUser = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const updateUser = async (req: CustomRequest, res: Response): Promise<void> => {
     const id: string = req.params.id;
     const user: User = req.user;
 
@@ -87,7 +87,7 @@ export const updateUser = async (req: RequestWithUser, res: Response): Promise<v
 };
 
 // Deleting a User
-export const deleteUser = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const deleteUser = async (req: CustomRequest, res: Response): Promise<void> => {
     const id: string = req.params.id;
     const user: User = req.user;
 

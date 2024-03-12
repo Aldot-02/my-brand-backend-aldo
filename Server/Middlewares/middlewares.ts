@@ -1,14 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import { ParamsDictionary } from 'express-serve-static-core';
+// import { ParamsDictionary } from 'express-serve-static-core';
 import UserModel from '../Models/UserModel';
 
-export interface RequestWithUser extends Request<ParamsDictionary> {
-    userId?: string;
-    user?: any;
-}
+export interface CustomRequest extends Request {
+    user?: any; 
+  }
 
-export const isAuthenticated = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+export const isAuthenticated = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const accessToken = req.cookies['access'];
         
@@ -28,7 +27,6 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
             return;
         }
 
-        // Find the user based on the id in the payload
         const user = await UserModel.findById(payload.id);
 
         if (!user) {
@@ -38,7 +36,6 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
             return;
         }
 
-        // Add the user to the request object
         req.user = user;
 
         next();
@@ -49,8 +46,7 @@ export const isAuthenticated = async (req: RequestWithUser, res: Response, next:
     }
 }
 
-export const isAdmin = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    // Access the user directly from req.user
+export const isAdmin = async (req: CustomRequest, res: Response, next: NextFunction) => {
     const user = req.user;
 
     if (!user) {
@@ -60,7 +56,6 @@ export const isAdmin = async (req: RequestWithUser, res: Response, next: NextFun
         return;
     }
 
-    // Check if the user is an admin
     if (!user.isAdmin) {
         return res.status(403).json({ message: "Unauthorized, admin access required" });
     }

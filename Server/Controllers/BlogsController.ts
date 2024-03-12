@@ -1,7 +1,7 @@
 import BlogsModel, { Blog } from "../Models/BlogsModel";
 import { Request, Response } from "express";
 import CommentsModel, {Comment} from "../Models/BlogsCommentsModel"
-import { RequestWithUser } from '../Middlewares/middlewares'
+import { CustomRequest } from '../Middlewares/middlewares'
 
 // CREATING A BLOG
 export const createBlog = async (req: Request, res: Response): Promise<void> => {
@@ -102,7 +102,7 @@ export const likeBlog = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Commenting on a blog post
-export const commentBlog = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const commentBlog = async (req: CustomRequest, res: Response): Promise<void> => {
     const blogId = req.params.id;
     const { message } = req.body;
 
