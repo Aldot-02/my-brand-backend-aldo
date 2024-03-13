@@ -99,7 +99,7 @@ const router = express_1.default.Router();
  *       '500':
  *         description: Internal server error
  */
-router.post('/', BlogsController_1.createBlog);
+router.post('/', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.createBlog);
 /**
  * @openapi
  * /blog/all:
@@ -160,7 +160,7 @@ router.get('/:id', BlogsController_1.getBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id', BlogsController_1.updateBlog);
+router.patch('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.updateBlog);
 /**
  * @openapi
  * /blog/{id}:
@@ -181,7 +181,7 @@ router.patch('/:id', BlogsController_1.updateBlog);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/:id', BlogsController_1.deleteBlog);
+router.delete('/:id', middlewares_1.isAuthenticated, middlewares_1.isAdmin, BlogsController_1.deleteBlog);
 /**
  * @openapi
  * /blog/{id}/like:
