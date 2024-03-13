@@ -213,7 +213,7 @@ router.delete('/:id', BlogsController_1.deleteBlog);
  *       '500':
  *         description: Internal server error
  */
-router.patch('/:id/like', BlogsController_1.likeBlog);
+router.patch('/:id/like', middlewares_1.isAuthenticated, BlogsController_1.likeBlog);
 /**
  * @openapi
  * /blog/{id}/comment:
