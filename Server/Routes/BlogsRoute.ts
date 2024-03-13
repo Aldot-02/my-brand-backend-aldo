@@ -251,7 +251,7 @@ router.patch('/:id/like', likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', isAuthenticated, commentBlog);
+router.post('/:id/comment', commentBlog);
 
 /**
  * @openapi

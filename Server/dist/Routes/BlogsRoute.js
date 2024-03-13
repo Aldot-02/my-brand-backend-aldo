@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const BlogsController_1 = require("../Controllers/BlogsController");
-const middlewares_1 = require("../Middlewares/middlewares");
 const router = express_1.default.Router();
 /**
  * @openapi
@@ -246,7 +245,7 @@ router.patch('/:id/like', BlogsController_1.likeBlog);
  *       '500':
  *         description: Internal server error
  */
-router.post('/:id/comment', middlewares_1.isAuthenticated, BlogsController_1.commentBlog);
+router.post('/:id/comment', BlogsController_1.commentBlog);
 /**
  * @openapi
  * /blog/{id}/comments:
