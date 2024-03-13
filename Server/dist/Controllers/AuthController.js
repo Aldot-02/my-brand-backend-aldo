@@ -121,7 +121,6 @@ const AuthenticatedUser = async (req, res) => {
             });
             return;
         }
-        req.user = user;
         res.status(200).json(user);
     }
     catch (e) {

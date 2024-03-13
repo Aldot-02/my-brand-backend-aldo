@@ -6,10 +6,6 @@ import jwt from 'jsonwebtoken';
 
 const { sign, verify } = jwt;
 
-interface CustomRequest extends Request {
-    user?: any; 
-}
-
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { firstname, lastname, email, password, isAdmin }: User = req.body;
 
@@ -112,7 +108,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 
 // Getting Authenticated User
-export const AuthenticatedUser = async (req: CustomRequest, res: Response): Promise<void> => {
+export const AuthenticatedUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const accessToken = req.cookies['access'];
         
@@ -141,7 +137,6 @@ export const AuthenticatedUser = async (req: CustomRequest, res: Response): Prom
             return;
         }
         
-        req.user = user
 
         res.status(200).json(user);
     } catch (e) {
