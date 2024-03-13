@@ -75,7 +75,7 @@ router.get('/profile', isAuthenticated, getProfile);
  *       '500':
  *         description: Internal server error
  */
-router.get('/', getAllUsers);
+router.get('/', isAuthenticated, isAdmin, getAllUsers);
 
 /**
  * @openapi
