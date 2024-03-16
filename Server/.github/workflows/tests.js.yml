@@ -24,9 +24,11 @@ jobs:
 
     - name: Dependencies installation
       run: npm install
+      working-directory: Server
 
     - name: Running Tests
       run: npm run test
+      working-directory: Server
 
       env:
         MONGODB_URL: ${{ secrets.MONGODB_URL }}
