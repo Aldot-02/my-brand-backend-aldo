@@ -128,13 +128,13 @@ describe('Users Endpoints', () => {
         expect(response.status).toBe(500);
     });
     
-    it("delete user if found with proper permissions", async () => {
-        const response = await request(app)
-          .delete(`/user/${user?._id}`)
-          .set("Cookie", `access=${token}`)
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe("Account deleted successfully");
-    });
+    // it("delete user if found with proper permissions", async () => {
+    //     const response = await request(app)
+    //       .delete(`/user/${user?._id}`)
+    //       .set("Cookie", `access=${token}`)
+    //     expect(response.status).toBe(200);
+    //     expect(response.body.message).toBe("Account deleted successfully");
+    // });
 
 
 

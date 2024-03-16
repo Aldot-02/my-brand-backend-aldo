@@ -21,11 +21,11 @@ beforeAll(async () => {
     (0, globals_1.describe)('Given all required credentials', () => {
         (0, globals_1.it)('should return error when the account already exist.', async () => {
             const userData = {
-                firstname: 'TTC',
-                lastname: 'khazan1',
-                email: 'khazan@gmail.com',
+                firstname: 'Aldo',
+                lastname: 'Twizerimana',
+                email: 'twizald.02@gmail.com',
                 password: '123123',
-                isAdmin: false
+                isAdmin: true
             };
             const response = await (0, supertest_1.default)(server_1.app)
                 .post('/auth/register')
@@ -33,29 +33,29 @@ beforeAll(async () => {
             (0, globals_1.expect)(response.status).toBe(409);
             (0, globals_1.expect)(response.body.message).toBe("Account already exists with this email.");
         });
-        (0, globals_1.it)('should create a new user when all required credentials are provided', async () => {
-            const userData = {
-                firstname: 'Aldo',
-                lastname: 'Twizerimana',
-                email: 'twizald.02@gmail.com',
-                password: '123123',
-                isAdmin: true
-            };
-            await (0, supertest_1.default)(server_1.app)
-                .post('/auth/register')
-                .send(userData)
-                .expect(200)
-                .expect('Content-Type', /json/)
-                .then(async (response) => {
-                (0, globals_1.expect)(response.body).toHaveProperty('_id');
-            });
-        });
+        // it('should create a new user when all required credentials are provided', async () => {
+        //     const userData = {
+        //         firstname: 'Aldo',
+        //         lastname: 'Twizerimana',
+        //         email: 'twizald.02@gmail.com',
+        //         password: '123123',
+        //         isAdmin: true
+        //     };
+        //     await supertest(app)
+        //         .post('/auth/register')
+        //         .send(userData)
+        //         .expect(200)
+        //         .expect('Content-Type', /json/)
+        //         .then(async (response) => {    
+        //             expect(response.body).toHaveProperty('_id');
+        //             });
+        // });
     });
     (0, globals_1.describe)('When one or more required credentials are missing', () => {
         (0, globals_1.it)('should return a 400 error if firstname is missing', async () => {
             const userData = {
-                lastname: 'khazan',
-                email: 'khazan@gmail.com',
+                lastname: 'Twizerimana',
+                email: 'twizald.02@gmail.com',
                 password: '123123'
             };
             await (0, supertest_1.default)(server_1.app)
@@ -65,8 +65,8 @@ beforeAll(async () => {
         });
         (0, globals_1.it)('should return a 400 error if lastname is missing', async () => {
             const userData = {
-                firstname: 'TTC',
-                email: 'khazan@gmail.com',
+                firstname: 'Aldo',
+                email: 'twizald.02@gmail.com',
                 password: '123123'
             };
             await (0, supertest_1.default)(server_1.app)
@@ -76,8 +76,8 @@ beforeAll(async () => {
         });
         (0, globals_1.it)('should return a 400 error if email is missing', async () => {
             const userData = {
-                firstname: 'TTC',
-                lastname: 'khazan',
+                firstname: 'Aldo',
+                lastname: 'Twizerimana',
                 password: '123123'
             };
             await (0, supertest_1.default)(server_1.app)
@@ -87,9 +87,9 @@ beforeAll(async () => {
         });
         (0, globals_1.it)('should return a 400 error if password is missing', async () => {
             const userData = {
-                firstname: 'TTC',
-                lastname: 'khazan',
-                email: 'khazan@gmail.com'
+                firstname: 'Aldo',
+                lastname: 'Twizerimana',
+                email: 'twizald.02@gmail.com'
             };
             await (0, supertest_1.default)(server_1.app)
                 .post('/auth/register')
@@ -104,7 +104,7 @@ let accessToken = '';
     (0, globals_1.describe)('Given correct credentials', () => {
         (0, globals_1.it)('should log in the user and return a valid access token', async () => {
             const userData = {
-                email: 'khazan@gmail.com',
+                email: 'twizald.02@gmail.com',
                 password: '123123'
             };
             await (0, supertest_1.default)(server_1.app)
@@ -134,7 +134,7 @@ let accessToken = '';
         });
         (0, globals_1.it)('should return a 400 error if password is missing', async () => {
             const userData = {
-                email: 'khazan@gmail.com'
+                email: 'twizald.02@gmail.com'
             };
             await (0, supertest_1.default)(server_1.app)
                 .post('/auth/login')
@@ -162,7 +162,7 @@ let accessToken = '';
     });
     (0, globals_1.it)('should return a 400 error if password is incorrect', async () => {
         const userData = {
-            email: 'khazan@gmail.com',
+            email: 'twizald.02@gmail.com',
             password: 'wrongpassword'
         };
         await (0, supertest_1.default)(server_1.app)

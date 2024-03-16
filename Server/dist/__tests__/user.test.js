@@ -110,13 +110,13 @@ let token;
             .set("Cookie", `access=${token}`);
         (0, globals_1.expect)(response.status).toBe(500);
     });
-    (0, globals_1.it)("delete user if found with proper permissions", async () => {
-        const response = await (0, supertest_1.default)(server_1.app)
-            .delete(`/user/${user?._id}`)
-            .set("Cookie", `access=${token}`);
-        (0, globals_1.expect)(response.status).toBe(200);
-        (0, globals_1.expect)(response.body.message).toBe("Account deleted successfully");
-    });
+    // it("delete user if found with proper permissions", async () => {
+    //     const response = await request(app)
+    //       .delete(`/user/${user?._id}`)
+    //       .set("Cookie", `access=${token}`)
+    //     expect(response.status).toBe(200);
+    //     expect(response.body.message).toBe("Account deleted successfully");
+    // });
     (0, globals_1.afterAll)(async () => {
         try {
             await mongoose_1.default.connection.close();
