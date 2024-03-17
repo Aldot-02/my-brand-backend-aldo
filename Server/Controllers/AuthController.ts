@@ -177,11 +177,8 @@ export const Refresh = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const Logout = async (req: Request, res: Response): Promise<void> => {
-    // res.cookie('access', '', {maxAge: 0});
-    // res.cookie('refresh', '', {maxAge: 0});
-
-    res.clearCookie("access");
-    res.clearCookie("refresh");
+    res.cookie('access', '', {maxAge: 0});
+    res.cookie('refresh', '', {maxAge: 0});
 
     res.status(200).json({message: "Logout was successful"});
 }

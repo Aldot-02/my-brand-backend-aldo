@@ -33,6 +33,22 @@ describe('Blogs Endpoints', () => {
 
     });
 
+    it('should not create a blog given incorrect token', async () => {
+      const invalidAccessToken = 'invalid_access_token';
+      const response = await request(app)
+              .post('/blog/')
+              .set("Cookie", `access=${invalidAccessToken}`)
+              .send({
+                author: "Fezag",
+                title: "This should create a blog",
+                content: "Testing successful blog creation",
+                coverImage: "https://image2.png",
+              });
+          expect(response.status).toBe(401);
+          expect(response.body.message).toBe('unauthenticated');
+  
+    });
+
     it('POST /blog/ should create a blog', async () => {
       const response = await request(app)
         .post("/blog/")
@@ -124,6 +140,20 @@ describe('Blogs Endpoints', () => {
       });
     });
 
+    it('PATCH /blog/:id should not create a blog given incorrect token', async () => {
+      const invalidAccessToken = 'invalid_access_token';
+      const updatedTitle = "Updated Test Blog testing test";
+      const response = await request(app)
+              .patch(`/blog/${blog?._id}`)
+              .set("Cookie", `access=${invalidAccessToken}`)
+              .send({
+                title: updatedTitle,
+              });
+          expect(response.status).toBe(401);
+          expect(response.body.message).toBe('unauthenticated');
+  
+    });
+
     it("PATCH /blog/:id should update a specific blog post by ID", async () => {
       const updatedTitle = "Updated Test Blog testing test";
   
@@ -184,69 +214,79 @@ describe('Blogs Endpoints', () => {
 
 
         // COMMENTING FUNCTIONALITY
-        it("should create a comment given the blog exist", async () => {
-          const response = await request(app)
-          .post(`/blog/${blog?._id}/comment`)
-          .set("Cookie", `access=${token}`)
-            .send({
-              message: "This blog should have the reaction message",
-            });
-      
-          expect(response.status).toBe(200);
+    it("should create a comment given the blog exist", async () => {
+      const response = await request(app)
+      .post(`/blog/${blog?._id}/comment`)
+      .set("Cookie", `access=${token}`)
+        .send({
+          message: "This blog should have the reaction message",
         });
+  
+      expect(response.status).toBe(200);
+    });
     
-        it("should not create a comment if the blog is invalid or not found", async () => {
-          const response = await request(app)
-            .post(`/blog/65f31721b60056ba8c00e78c/comment`)
-            .set("Cookie", `access=${token}`)
-            .send({
-              message: "This blog should have the reaction message",
-            });
-      
-          expect(response.status).toBe(404);
-          expect(response.body.message).toBe("Blog Post Not Found");
+    it("should not create a comment if the blog is invalid or not found", async () => {
+      const response = await request(app)
+        .post(`/blog/65f31721b60056ba8c00e78c/comment`)
+        .set("Cookie", `access=${token}`)
+        .send({
+          message: "This blog should have the reaction message",
         });
-    
-        it("should return 500 when given invalid blog id while attempting to create a comment", async () => {
-          const response = await request(app)
-          .post(`/blog/invalidId/comment`)
-          .set("Cookie", `access=${token}`)
-            .send({
-              message: "This blog should have the reaction message",
-            });
-      
-          expect(response.status).toBe(500);
+  
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe("Blog Post Not Found");
+    });
+
+    it("should return 500 when given invalid blog id while attempting to create a comment", async () => {
+      const response = await request(app)
+      .post(`/blog/invalidId/comment`)
+      .set("Cookie", `access=${token}`)
+        .send({
+          message: "This blog should have the reaction message",
         });
+  
+      expect(response.status).toBe(500);
+    });
 
 
-        // GETTING BLOG'S COMMENTS FUNCTIONALITY
-        it("should get all comments for a specific blog by passing in its id", async () => {
-          const response = await request(app)
-            .get(`/blog/${blog?._id}/comments`)
-            .set("Cookie", `access=${token}`);
-      
-          expect(response.status).toBe(200);          
-        });
+    // GETTING BLOG'S COMMENTS FUNCTIONALITY
+    it("should get all comments for a specific blog by passing in its id", async () => {
+      const response = await request(app)
+        .get(`/blog/${blog?._id}/comments`)
+        .set("Cookie", `access=${token}`);
+  
+      expect(response.status).toBe(200);          
+    });
 
-        it("should return 404 if trying to comment on unexisting blog", async () => {
-          const response = await request(app)
-            .get(`/blog/65f31721b60056ba8c00e78c/comments`)
-            .set("Cookie", `access=${token}`)
-      
-          expect(response.status).toBe(404);
-          expect(response.body.message).toBe("Blog Post Not Found");
-        });
-    
-        it("should return 500 when given invalid blog id while attempting to fetch or get or display its comments", async () => {
-          const response = await request(app)
-          .get(`/blog/invalidId/comments`)
-          .set("Cookie", `access=${token}`)
-      
-          expect(response.status).toBe(500);
-        });
+    it("should return 404 if trying to comment on unexisting blog", async () => {
+      const response = await request(app)
+        .get(`/blog/65f31721b60056ba8c00e78c/comments`)
+        .set("Cookie", `access=${token}`)
+  
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe("Blog Post Not Found");
+    });
+
+    it("should return 500 when given invalid blog id while attempting to fetch or get or display its comments", async () => {
+      const response = await request(app)
+      .get(`/blog/invalidId/comments`)
+      .set("Cookie", `access=${token}`)
+  
+      expect(response.status).toBe(500);
+    });
 
 
         // DELETING COMMENT FUNCTIONALITY
+
+    it('should not delete a blog given incorrect token', async () => {
+      const invalidAccessToken = 'invalid_access_token';
+      const response = await request(app)
+              .delete(`/blog/${blog?._id}`)
+              .set("Cookie", `access=${invalidAccessToken}`)
+          expect(response.status).toBe(401);
+          expect(response.body.message).toBe('unauthenticated');
+  
+    });
 
     it("delete blog by invalid blog id", async () => {
       const response = await request(app)

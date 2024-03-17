@@ -7,6 +7,8 @@ const server_1 = require("../utils/server");
 const supertest_1 = __importDefault(require("supertest"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const globals_1 = require("@jest/globals");
+const UserModel_1 = __importDefault(require("../Models/UserModel"));
+const supertest_2 = __importDefault(require("supertest"));
 jest.setTimeout(20000);
 beforeAll(async () => {
     try {
@@ -173,6 +175,69 @@ let accessToken = '';
             .then((response) => {
             (0, globals_1.expect)(response.body.message).toBe('Wrong Credentials');
         });
+    });
+});
+(0, globals_1.describe)('GET /auth/authenticated', () => {
+    let user = null;
+    let token;
+    (0, globals_1.beforeEach)(async () => {
+        user = await UserModel_1.default.findOne();
+        const loginResponse = await (0, supertest_2.default)(server_1.app)
+            .post("/auth/login")
+            .send({ email: "twizald.02@gmail.com", password: "123123" });
+        token = loginResponse.body.accessToken;
+        console.log(token);
+        console.log(loginResponse.body);
+    });
+    (0, globals_1.it)('should return the authenticated user when a valid access token is provided', async () => {
+        const response = await (0, supertest_1.default)(server_1.app)
+            .get('/auth/authenticated')
+            .set("Cookie", `access=${token}`);
+        const user = (0, globals_1.expect)(response.body).toMatchObject({
+            _id: globals_1.expect.any(String),
+            firstname: globals_1.expect.any(String),
+            lastname: globals_1.expect.any(String),
+            password: globals_1.expect.any(String),
+            email: globals_1.expect.any(String),
+            isAdmin: globals_1.expect.any(Boolean),
+            createdAt: globals_1.expect.any(String),
+            updatedAt: globals_1.expect.any(String),
+            __v: globals_1.expect.any(Number),
+        });
+        (0, globals_1.expect)(response.statusCode).toBe(200);
+    });
+    (0, globals_1.it)('should return 401 "unauthenticated" when no access token is provided', async () => {
+        const response = await (0, supertest_1.default)(server_1.app)
+            .get('/auth/authenticated');
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
+    (0, globals_1.it)('should return 401 "unauthenticated" when the access token is invalid or expired', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .get('/auth/authenticated')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
+});
+let token;
+(0, globals_1.describe)('POST /auth/refresh', () => {
+    let user = null;
+    (0, globals_1.beforeEach)(async () => {
+        user = await UserModel_1.default.findOne();
+        const loginResponse = await (0, supertest_2.default)(server_1.app)
+            .post("/auth/login")
+            .send({ email: "twizald.02@gmail.com", password: "123123" });
+        token = loginResponse.body.accessToken;
+        console.log(token);
+        console.log(loginResponse.body);
+    });
+    (0, globals_1.it)('should log a user out', async () => {
+        const response = await (0, supertest_1.default)(server_1.app)
+            .post('/auth/logout');
+        (0, globals_1.expect)(response.status).toBe(200);
+        (0, globals_1.expect)(response.body.message).toBe('Logout was successful');
     });
 });
 (0, globals_1.afterAll)(async () => {

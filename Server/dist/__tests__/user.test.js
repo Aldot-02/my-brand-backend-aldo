@@ -31,6 +31,14 @@ let token;
         console.log(token);
         console.log(loginResponse.body);
     });
+    (0, globals_1.it)('should not get all users given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .get('/user/')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
     (0, globals_1.it)('GET /user/ should get all users given the admin permission', async () => {
         const response = await (0, supertest_1.default)(server_1.app)
             .get("/user/")
@@ -47,6 +55,14 @@ let token;
             updatedAt: globals_1.expect.any(String),
             __v: globals_1.expect.any(Number),
         });
+    });
+    (0, globals_1.it)('should not get user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .get('/user/${user?._id}')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
     });
     (0, globals_1.it)("should get a user by user role or admin role given user id", async () => {
         const response = await (0, supertest_1.default)(server_1.app)
@@ -83,6 +99,14 @@ let token;
         (0, globals_1.expect)(response.statusCode).toBe(401);
     });
     // UPDATING A USER
+    (0, globals_1.it)('should not update user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .patch('/user/${user?._id}')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
     (0, globals_1.it)("PATCH /user/:id should update a specific blog post by ID", async () => {
         const updatedFirstName = "Telephone Name";
         const response = await (0, supertest_1.default)(server_1.app)
@@ -103,6 +127,15 @@ let token;
             firstname: updatedFirstName,
         });
         (0, globals_1.expect)(response.status).toBe(500);
+    });
+    // deleting
+    (0, globals_1.it)('should not delete user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .delete('/user/${user?._id}')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
     });
     (0, globals_1.it)("delete user by invalid user id", async () => {
         const response = await (0, supertest_1.default)(server_1.app)

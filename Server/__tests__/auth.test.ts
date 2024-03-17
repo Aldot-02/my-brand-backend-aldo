@@ -1,7 +1,10 @@
 import { app } from '../utils/server';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
-import { describe, expect, it, afterAll } from "@jest/globals";
+import { describe, expect, it, afterAll, beforeEach } from "@jest/globals";
+import UserModel, { User } from '../Models/UserModel';
+import request from "supertest";
+import { Response } from "supertest";
 
 jest.setTimeout(20000);
 
@@ -198,6 +201,89 @@ describe('POST /auth/login', () => {
           });
   });
 });
+
+describe ('GET /auth/authenticated', ()=> {
+    let user: User | null = null;
+    let token: string | undefined;
+
+    beforeEach(async () => {
+        user = await UserModel.findOne();
+        const loginResponse: Response = await request(app)
+        .post("/auth/login")
+        .send({ email: "twizald.02@gmail.com", password: "123123" });
+
+        token = loginResponse.body.accessToken;
+        console.log(token);
+        console.log(loginResponse.body)
+
+    });
+
+    
+
+    it('should return the authenticated user when a valid access token is provided', async () => {
+        const response = await supertest(app)
+          .get('/auth/authenticated')
+          .set("Cookie", `access=${token}`);
+    
+        const user = expect(response.body).toMatchObject({
+            _id: expect.any(String),
+            firstname: expect.any(String),
+            lastname: expect.any(String),
+            password: expect.any(String),
+            email: expect.any(String),
+            isAdmin: expect.any(Boolean),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            __v: expect.any(Number),
+          });
+        expect(response.statusCode).toBe(200);
+    });
+    
+    it('should return 401 "unauthenticated" when no access token is provided', async () => {
+    const response = await supertest(app)
+        .get('/auth/authenticated');
+    
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('unauthenticated');
+    });
+    
+    it('should return 401 "unauthenticated" when the access token is invalid or expired', async () => {
+    const invalidAccessToken = 'invalid_access_token';
+    const response = await supertest(app)
+            .get('/auth/authenticated')
+            .set("Cookie", `access=${invalidAccessToken}`);
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBe('unauthenticated');
+
+    });
+})
+
+let token: string | undefined;
+
+describe ('POST /auth/refresh', () => {
+    let user: User | null = null;
+
+    beforeEach(async () => {
+        user = await UserModel.findOne();
+        const loginResponse: Response = await request(app)
+        .post("/auth/login")
+        .send({ email: "twizald.02@gmail.com", password: "123123" });
+
+        token = loginResponse.body.accessToken;
+        console.log(token);
+        console.log(loginResponse.body)
+
+    });
+
+    it('should log a user out', async () => {
+        const response = await supertest(app)
+            .post('/auth/logout');
+        
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Logout was successful');
+    });
+
+})
 
 
 afterAll(async () => {

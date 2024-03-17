@@ -30,6 +30,20 @@ let token;
         console.log(token);
         console.log(loginResponse.body);
     });
+    (0, globals_1.it)('should not create a blog given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .post('/blog/')
+            .set("Cookie", `access=${invalidAccessToken}`)
+            .send({
+            author: "Fezag",
+            title: "This should create a blog",
+            content: "Testing successful blog creation",
+            coverImage: "https://image2.png",
+        });
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
     (0, globals_1.it)('POST /blog/ should create a blog', async () => {
         const response = await (0, supertest_1.default)(server_1.app)
             .post("/blog/")
@@ -116,6 +130,18 @@ let token;
             updatedAt: globals_1.expect.any(String),
             __v: globals_1.expect.any(Number),
         });
+    });
+    (0, globals_1.it)('PATCH /blog/:id should not create a blog given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const updatedTitle = "Updated Test Blog testing test";
+        const response = await (0, supertest_1.default)(server_1.app)
+            .patch(`/blog/${blog?._id}`)
+            .set("Cookie", `access=${invalidAccessToken}`)
+            .send({
+            title: updatedTitle,
+        });
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
     });
     (0, globals_1.it)("PATCH /blog/:id should update a specific blog post by ID", async () => {
         const updatedTitle = "Updated Test Blog testing test";
@@ -211,6 +237,14 @@ let token;
         (0, globals_1.expect)(response.status).toBe(500);
     });
     // DELETING COMMENT FUNCTIONALITY
+    (0, globals_1.it)('should not delete a blog given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await (0, supertest_1.default)(server_1.app)
+            .delete(`/blog/${blog?._id}`)
+            .set("Cookie", `access=${invalidAccessToken}`);
+        (0, globals_1.expect)(response.status).toBe(401);
+        (0, globals_1.expect)(response.body.message).toBe('unauthenticated');
+    });
     (0, globals_1.it)("delete blog by invalid blog id", async () => {
         const response = await (0, supertest_1.default)(server_1.app)
             .delete("/blog/invalid")

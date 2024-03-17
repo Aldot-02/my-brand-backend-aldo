@@ -34,6 +34,16 @@ describe('Users Endpoints', () => {
 
     });
 
+    it('should not get all users given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await request(app)
+                .get('/user/')
+                .set("Cookie", `access=${invalidAccessToken}`);
+            expect(response.status).toBe(401);
+            expect(response.body.message).toBe('unauthenticated');
+    
+    });
+
     it('GET /user/ should get all users given the admin permission', async () => {
         const response = await request(app)
             .get("/user/")
@@ -50,6 +60,16 @@ describe('Users Endpoints', () => {
           updatedAt: expect.any(String),
           __v: expect.any(Number),
         });
+    });   
+
+    it('should not get user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await request(app)
+                .get('/user/${user?._id}')
+                .set("Cookie", `access=${invalidAccessToken}`);
+            expect(response.status).toBe(401);
+            expect(response.body.message).toBe('unauthenticated');
+    
     });
 
     it("should get a user by user role or admin role given user id", async () => {
@@ -94,6 +114,17 @@ describe('Users Endpoints', () => {
     });
 
     // UPDATING A USER
+
+    it('should not update user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await request(app)
+                .patch('/user/${user?._id}')
+                .set("Cookie", `access=${invalidAccessToken}`);
+            expect(response.status).toBe(401);
+            expect(response.body.message).toBe('unauthenticated');
+    
+    });
+
     it("PATCH /user/:id should update a specific blog post by ID", async () => {
         const updatedFirstName = "Telephone Name";
     
@@ -119,6 +150,18 @@ describe('Users Endpoints', () => {
           });
     
         expect(response.status).toBe(500);
+    });
+
+
+    // deleting
+    it('should not delete user information given incorrect token', async () => {
+        const invalidAccessToken = 'invalid_access_token';
+        const response = await request(app)
+                .delete('/user/${user?._id}')
+                .set("Cookie", `access=${invalidAccessToken}`);
+            expect(response.status).toBe(401);
+            expect(response.body.message).toBe('unauthenticated');
+    
     });
 
     it("delete user by invalid user id", async () => {
