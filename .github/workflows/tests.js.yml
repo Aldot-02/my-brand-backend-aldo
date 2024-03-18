@@ -27,11 +27,12 @@ jobs:
 
     - name: Running Tests
       run: npm run test
-
+# Putting on some environment variables
       env:
         MONGODB_URL: ${{ secrets.MONGODB_URL }}
         PORT: ${{ secrets.PORT }}
 
+# A job to deploy to render with auto deploy set to no on render
   deploy:
     name: Deploying
     needs: [build]
