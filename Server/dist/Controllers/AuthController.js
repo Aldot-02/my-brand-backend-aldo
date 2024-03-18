@@ -154,8 +154,8 @@ const Refresh = async (req, res) => {
 };
 exports.Refresh = Refresh;
 const Logout = async (req, res) => {
-    res.cookie('access', '', { maxAge: 0 });
-    res.cookie('refresh', '', { maxAge: 0 });
+    res.cookie('access', 'deleted', { maxAge: -1 });
+    res.cookie('refresh', 'deleted', { maxAge: -1 });
     res.status(200).json({ message: "Logout was successful" });
 };
 exports.Logout = Logout;
