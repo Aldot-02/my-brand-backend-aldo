@@ -74,7 +74,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
             }
 
             // ACCESS TOKEN
-            const accessToken = sign({id:user._id, isAdmin: user.isAdmin}, "access_secret", {expiresIn: '10m'});
+            const accessToken = sign({id:user._id, isAdmin: user.isAdmin}, "access_secret", {expiresIn: '5m'});
     
             // REFRESH TOKEN
             const refreshToken = sign({id:user._id, isAdmin: user.isAdmin}, "refresh_secret", {expiresIn: '1w'});
@@ -177,8 +177,7 @@ export const Refresh = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const Logout = async (req: Request, res: Response): Promise<void> => {
-    res.cookie('access', 'deleted', { maxAge: -1 });
-    res.cookie('refresh', 'deleted', { maxAge: -1 });
+    res.cookie('access', '', {maxAge: -1});
 
-    res.status(200).json({ message: "Logout was successful" });
-};
+    res.status(200).json({message: "Logout was successful"});
+}
