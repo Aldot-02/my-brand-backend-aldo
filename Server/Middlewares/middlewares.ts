@@ -6,7 +6,7 @@ export interface CustomRequest extends Request {
     user?: any; 
 }
 
-export const isAuthenticated = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
+export const isAuthenticated: any = async (req: CustomRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const accessToken = req.cookies['access'];
         
